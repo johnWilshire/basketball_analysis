@@ -1,0 +1,33 @@
+---
+output: pdf_document
+---
+
+# This is the bild analysis of basketball 'streak' data
+
+```{R}
+library(bild)
+```
+
+```{R}
+str(airpollution)
+```
+
+This is the structure of the example dataset.  Need to massage our data into this sort of thing.  Note that this doesn't have a time column, since it's not using that functionality of the underlying package.  We'll have to think about this for our data.
+
+```{R}
+air2r <- bild(wheeze~age+smoking, data=airpollution, trace=TRUE, 
+              time="age", aggregate=smoking, dependence="MC2R")
+```
+
+That was an example model.  
+
+```{R}
+summary(air2r)
+```
+
+Plotting to check assumptions
+
+```{R}
+plot(air2r)
+```
+
