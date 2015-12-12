@@ -25,6 +25,36 @@ curry <- ball[ball$player.player_id == "curryst01",]
 
 ### Bild
 
+# we will call this a lot so I made a function for it,
+# this way we can easily add / change covariates
+# and reevaluate models
+
+bild_model <- function(dataset, dependance){
+  return(bild(makes_shot ~ shot_age + quater + score_diff + distance,
+               data = dataset,
+               trace = TRUE,
+               aggregate = "shot_age",
+               dependence = dependance,
+               time = "shot_age"))
+}
+
+# shot age calculates the 'age' of a shot based off of the id
+get_shot_age <- function (data) {
+  shot_age <- rep(0,nrow(data))
+  i <- 0
+  id <- 0
+  for (event_index in 1:nrow(data)){
+    if (id != data$id[event_index]){
+      id <- data$id[event_index]
+      i <- 0
+    } else {
+      i <- i + 1
+    }
+    shot_age[event_index] <- i
+  }
+  shot_age
+}
+
 ### Model 1: 
 # we only have 1 id'd person only curry
 # only with him for now
@@ -32,45 +62,38 @@ curry <- ball[ball$player.player_id == "curryst01",]
 curry_3ptr_1 <- curry[curry$event_type == "3-pt",]
 curry_3ptr_1$id <- 1
 # create an age of the shots from the curry
-curry_3ptr_1$shot_age <- 1:nrow(curry_3ptr_1)
+curry_3ptr_1$shot_age <- get_shot_age(curry_3ptr_1)
 
-bild_1_id <- bild(makes_shot ~ shot_age + quater + score_diff + distance,
-                  data = curry_3ptr_1,
-                  trace = TRUE,
-                  aggregate = "shot_age",
-                  dependence = "MC2",
-                  time = "shot_age")
-summary(bild_1_id)
-# plot(bild_1_id, main="bild_model_1")
+bild_1_ind <- bild_model(curry_3ptr_1, "ind")
+bild_1_MC1 <- bild_model(curry_3ptr_1, "MC1")
+bild_1_MC2 <- bild_model(curry_3ptr_1, "MC2")
+summary(bild_1_ind)
+summary(bild_1_MC1)
+summary(bild_1_MC2)
+# plot(bild_1_MC2, main="bild_model_1")
 
 ### Model 2: 
 # each game that curry has played in is given a different id
 # each shot in that "bucket" is given a different shot_age in ascending order
-
 curry_3ptr_2 <- curry[curry$event_type == "3-pt",]
 
 # assign ids
 curry_3ptr_2$id <- as.numeric(as.factor(curry_3ptr_2$game_id))
 # assign shot ages
 # this could be done without a for loop but i am not well versed enough in R / functional programming
-curry_3ptr_2$shot_age <- 0
-i <- 0
-id <- 0
-for (event_index in 1:nrow(curry_3ptr_2)){
-  if (id != curry_3ptr_2$id[event_index]){
-    id <- curry_3ptr_2$id[event_index]
-    i <- 0
-  } else {
-    i <- i + 1 
-  }
-  curry_3ptr_2$shot_age[event_index] <- i
+curry_3ptr_2$shot_age <- get_shot_age(curry_3ptr_2)
+
+# trying to assign a "counts" col in the dataset to determine weights and maybe get around the error
+rles <- rle(curry_3ptr_2$id)
+for (i in 1:nrow(curry_3ptr_2)){
+  curry_3ptr_2$counts[i] <- rles$lengths[rles$values == curry_3ptr_2$id[i]]
 }
 
-bild_2_id <- bild(makes_shot ~ shot_age + quater + score_diff + distance,
-                  data = curry_3ptr_2,
-                  trace = TRUE,
-                  aggregate = "shot_age",
-                  dependence = "ind",
-                  time = "shot_age")
-summary(bild_2_id)
-plot(bild_1_id, main="bild_model_1")
+bild_2_idd <- bild_model(curry_3ptr_2,"ind")
+bild_2_MC1 <- bild_model(curry_3ptr_2,"MC1")
+bild_2_MC2 <- bild_model(curry_3ptr_2,"MC2")
+
+summary(bild_2_idd)
+summary(bild_2_MC1)
+summary(bild_2_MC2)
+plot(bild_2_MC2, main="bild_model_2")
