@@ -29,13 +29,17 @@ curry <- ball[ball$player.player_id == "curryst01",]
 # this way we can easily add / change covariates
 # and reevaluate models
 
-bild_model <- function(dataset, dependance){
-  return(bild(makes_shot ~ shot_age + quater + score_diff + distance,
+bild_model <- function(dataset, dependance, summary = FALSE, time = "shot_age"){
+  model <- bild(makes_shot ~ shot_age + quater + score_diff + distance,
                data = dataset,
                trace = TRUE,
                aggregate = "shot_age",
                dependence = dependance,
-               time = "shot_age"))
+               time = "shot_age")
+  if (summary){
+    summary(model)
+  }
+  return(model)
 }
 
 # shot age calculates the 'age' of a shot based off of the id
@@ -52,7 +56,7 @@ get_shot_age <- function (data) {
     }
     shot_age[event_index] <- i
   }
-  shot_age
+  return(shot_age)
 }
 
 ### Model 1: 
@@ -64,36 +68,46 @@ curry_3ptr_1$id <- 1
 # create an age of the shots from the curry
 curry_3ptr_1$shot_age <- get_shot_age(curry_3ptr_1)
 
+# this takes some time  
 bild_1_ind <- bild_model(curry_3ptr_1, "ind")
 bild_1_MC1 <- bild_model(curry_3ptr_1, "MC1")
+bild_2_MC1R <- bild_model(curry_3ptr_2,"MC1R")
 bild_1_MC2 <- bild_model(curry_3ptr_1, "MC2")
+bild_2_MC2R <- bild_model(curry_3ptr_2,"MC2R")
+
 summary(bild_1_ind)
 summary(bild_1_MC1)
+summary(bild_1_MC1R)
 summary(bild_1_MC2)
+summary(bild_1_MC1R)
+
 # plot(bild_1_MC2, main="bild_model_1")
 
 ### Model 2: 
 # each game that curry has played in is given a different id
 # each shot in that "bucket" is given a different shot_age in ascending order
 curry_3ptr_2 <- curry[curry$event_type == "3-pt",]
-
 # assign ids
 curry_3ptr_2$id <- as.numeric(as.factor(curry_3ptr_2$game_id))
-# assign shot ages
-# this could be done without a for loop but i am not well versed enough in R / functional programming
+
 curry_3ptr_2$shot_age <- get_shot_age(curry_3ptr_2)
 
-# trying to assign a "counts" col in the dataset to determine weights and maybe get around the error
+# calcuates counts needed for bild
 rles <- rle(curry_3ptr_2$id)
 for (i in 1:nrow(curry_3ptr_2)){
   curry_3ptr_2$counts[i] <- rles$lengths[rles$values == curry_3ptr_2$id[i]]
 }
 
-bild_2_idd <- bild_model(curry_3ptr_2,"ind")
-bild_2_MC1 <- bild_model(curry_3ptr_2,"MC1")
-bild_2_MC2 <- bild_model(curry_3ptr_2,"MC2")
+bild_2_idd <- bild_model(curry_3ptr_2, "ind")
+bild_2_MC1 <- bild_model(curry_3ptr_2, "MC1")
+bild_2_MC1R <- bild_model(curry_3ptr_2, "MC1R")
+bild_2_MC2 <- bild_model(curry_3ptr_2, "MC2")
+bild_2_MC2R <- bild_model(curry_3ptr_2, "MC2R")
 
 summary(bild_2_idd)
 summary(bild_2_MC1)
+summary(bild_2_MC1R)
 summary(bild_2_MC2)
-plot(bild_2_MC2, main="bild_model_2")
+summary(bild_2_MC2R)
+
+# plot(bild_2_MC2, main = "bild_model_2")
