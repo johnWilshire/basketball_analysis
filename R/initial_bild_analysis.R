@@ -45,12 +45,12 @@ ball <- unique(ball)
 # change makes shot to numeric vector 1 = TRUE, 0 = FALSE
 ball$makes_shot <- as.numeric(ball$makes_shot) - 1
 
-# convert the time and dates to comfy POSIX 
+# convert the time and dates to comfy POSIX
 ball$date <-  lapply(ball$date, toString)
 ball$date <- strptime(ball$date,"%B %d, %Y")
 
 
-# there should not be two different score 
+# there should not be two different score
 # events within a tenth of a second
 ball$time <-  lapply(ball$time, toString)
 ball$time <- strptime(ball$time, "%M:%S")
@@ -68,18 +68,20 @@ curry_3ptr_1$id <- 1
 # for the bild time
 curry_3ptr_1$shot_age <- get_shot_age(curry_3ptr_1)
 
-# this takes some time with the random intercepts so we ommit  
+# this takes some time
+# there is an issue with the optimising of the log likeihood
+# on random intercepts
 bild_1_ind <- bild_model(curry_3ptr_1, "ind")
 bild_1_MC1 <- bild_model(curry_3ptr_1, "MC1")
-bild_1_MC1R <- bild_model(curry_3ptr_1, "MC1R")
+# bild_1_MC1R <- bild_model(curry_3ptr_1, "MC1R")
 bild_1_MC2 <- bild_model(curry_3ptr_1, "MC2")
-bild_1_MC2R <- bild_model(curry_3ptr_1,"MC2R")
+# bild_1_MC2R <- bild_model(curry_3ptr_1,"MC2R")
 
 summary(bild_1_ind)
 summary(bild_1_MC1)
-summary(bild_1_MC1R)
+# summary(bild_1_MC1R)
 summary(bild_1_MC2)
-summary(bild_1_MC1R)
+# summary(bild_1_MC1R)
 
 # plot(bild_1_MC2, main="bild_model_1")
 
@@ -106,10 +108,12 @@ bild_2_MC2R <- bild_model(curry_3ptr_2, "MC2R")
 
 summary(bild_2_idd)
 summary(bild_2_MC1)
-# summary(bild_2_MC1R)
+summary(bild_2_MC1R)
 summary(bild_2_MC2)
 summary(bild_2_MC2R)
 
+
+# TODO 
 ## dataset three has teams as different ids
 teams <- ball
 teams$id <- as.numeric(as.factor(teams$team))
