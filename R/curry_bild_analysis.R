@@ -112,10 +112,4 @@ summary(bild_2_MC1R)
 summary(bild_2_MC2)
 summary(bild_2_MC2R)
 
-
-# TODO 
-## dataset three has teams as different ids
-teams <- ball
-teams$id <- as.numeric(as.factor(teams$team))
-teams$shot_age <- get_shot_age(ball)
 # plot(bild_2_MC2, main = "bild_model_2")
