@@ -19,10 +19,8 @@ targets:
   ball_specific_year:
     command: subset_bball_by_year(ball_data_prepared_for_bild, I("2005"))
 
-  specific_model:
-    command: bild_model(ball_specific_year, I("ind"))
-      
+  all_models:
+    command: bild_all_models(ball_specific_year)
+
   output.rds:
-    command: save_model(specific_model)
-      
-  
+    command: save_model(all_models)

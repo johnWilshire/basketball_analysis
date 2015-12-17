@@ -7,7 +7,7 @@ library(bild)
 # this way we can easily add / change covariates
 # and reevaluate models
 bild_model <- function(dataset, dependance, summary = FALSE, time = "shot_age"){
-  model <- bild(makes_shot ~ shot_age + quater + score_diff + distance,
+  model <- bild(makes_shot ~ shot_age + quarter + score_diff + distance,
                data = dataset,
                trace = TRUE,
                aggregate = "shot_age",
@@ -55,7 +55,7 @@ ball$date <- strptime(ball$date,"%B %d, %Y")
 ball$time <-  lapply(ball$time, toString)
 ball$time <- strptime(ball$time, "%M:%S")
 ball <- ball[with(ball, order(time, decreasing = TRUE)),]
-ball <- ball[with(ball, order(date, quater)),]
+ball <- ball[with(ball, order(date, quarter)),]
 
 curry <- ball[ball$player.player_id == "curryst01",]
 ### Model 1: 

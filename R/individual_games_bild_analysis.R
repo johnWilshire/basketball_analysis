@@ -6,7 +6,7 @@ bild_model <-
   function(dataset, dependance, summary = FALSE, time = "shot_age") {
     model <-
       bild(
-        makes_shot ~ shot_age + quater + score_diff + distance,
+        makes_shot ~ shot_age + quarter + score_diff + distance,
         data = dataset,
         trace = TRUE,
         aggregate = "shot_age",
@@ -19,9 +19,22 @@ bild_model <-
     return(model)
   }
 
+
+# builds all models of different dependances
+# "ind", "MC1", "MC1R", "MC2", "MC2R"
+bild_all_models <- function (dataset){
+  models <- c()
+  for (dep in c("ind", "MC1", "MC1R", "MC2", "MC2R")){
+    print(paste("model with dependance: ", dep))
+    models <- c(models, bild_model(dataset, dep, TRUE))
+  }
+  return (models)
+}
+
+
 # shot age calculates the 'age' of a shot based off of the id
 get_shot_age <- function (data) {
-  shot_age <- rep(0,nrow(data))
+  shot_age <- rep(0, nrow(data))
   i <- 0
   id <- 0
   for (event_index in 1:nrow(data)) {
@@ -38,12 +51,12 @@ get_shot_age <- function (data) {
 
 # i tried fread in data.table but I was getting
 # an issue with the converting times / dates
-read_bball_data<-function(input_file="data/basketball_shots_curry_lebron_harden.csv"){
+read_bball_data <- function(input_file){
   ball <- read.csv(input_file, sep = "|")
   return(ball)
 }
 
-data_prepare<-function(ball){
+data_prepare <- function(ball){
   # change makes shot to numeric vector 1 = TRUE, 0 = FALSE
   ball$makes_shot <- as.numeric(ball$makes_shot) - 1
   
@@ -61,8 +74,7 @@ data_prepare<-function(ball){
   ball$shot_age <- get_shot_age(ball)
   
   # calcuates counts needed for bild
-  # TODO find a better way to do this
-  rles <- rle(ball$id)
+  #rles <- rle(ball$id)
   # all id's are given the same counts
   ball$counts <- rep(1,nrow(ball))
   # for (i in 1:nrow(ball)){
@@ -70,16 +82,16 @@ data_prepare<-function(ball){
   # }
   
   ball <- ball[with(ball, order(time, decreasing = TRUE)),]
-  ball <- ball[with(ball, order(date, quater)),]
+  ball <- ball[with(ball, order(date, quarter)),]
   return(ball)
 }
 
-subset_bball_by_year<-function(ball,year=2005){
-  ball_specific_year<-ball[grepl(year,ball$game_id),]
+subset_bball_by_year <- function(ball, year = 2005){
+  ball_specific_year <- ball[grepl(year, ball$game_id),]
   return(ball_specific_year)
 }
 
-save_model<-function(specific_model){
-  save(specific_model,file="output.rds")
+save_model <- function(specific_model){
+  save(specific_model, file = "output.rds")
 }
 

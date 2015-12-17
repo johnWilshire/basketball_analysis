@@ -22,7 +22,7 @@ ball$date <- strptime(ball$date,"%B %d, %Y")
 ball$time <-  lapply(ball$time,toString)
 ball$time <- strptime(ball$time,"%M:%S")
 ball <- ball[with(ball, order(time, decreasing = TRUE)),]
-ball <- ball[with(ball, order(date, quater)),]
+ball <- ball[with(ball, order(date, quarter)),]
 
 curry <- ball[ball$player.player_id == "curryst01",]
 
@@ -38,7 +38,7 @@ curry_3ptr_1$id <- 1
 # create an age of the shots from the curry
 curry_3ptr_1$shot_age <- 1:nrow(curry_3ptr_1)
 
-bild_1_id <- bild(makes_shot ~ shot_age + quater + score_diff + distance,
+bild_1_id <- bild(makes_shot ~ shot_age + quarter + score_diff + distance,
                   data = curry_3ptr_1,
                   trace = TRUE,
                   aggregate = "shot_age",
@@ -72,7 +72,7 @@ for (event_index in 1:nrow(curry_3ptr_2)){
   curry_3ptr_2$shot_age[event_index] <- i
 }
 
-bild_2_id <- bild(makes_shot ~ shot_age + quater + score_diff + distance,
+bild_2_id <- bild(makes_shot ~ shot_age + quarter + score_diff + distance,
                   data = curry_3ptr_2,
                   trace = TRUE,
                   aggregate = "shot_age",

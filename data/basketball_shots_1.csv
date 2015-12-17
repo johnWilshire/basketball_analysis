@@ -1,4 +1,4 @@
-date|game_id|team|quater|time|score|score_diff|event_type|makes_shot|distance|player.short_name|player.player_id
+date|game_id|team|quarter|time|score|score_diff|event_type|makes_shot|distance|player.short_name|player.player_id
 December 12, 2009|200912120DET|Detroit Pistons|2|10:25.0|24|-10|3-pt|False|23|A. Daye|dayeau01
 December 12, 2009|200912120DET|Detroit Pistons|3|0:57.9|69|2|2-pt|True|14|A. Daye|dayeau01
 April 11, 2010|201004110GSW|Oklahoma City Thunder|1|4:09.0|31|16|2-pt|False|2|S. Ibaka|ibakase01
