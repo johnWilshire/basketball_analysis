@@ -1,5 +1,6 @@
 *.pdf
-
+.remake/
+*.rds
 
 .Rproj.user
 .Rhistory
