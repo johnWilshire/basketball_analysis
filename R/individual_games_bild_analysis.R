@@ -10,7 +10,7 @@ bild_model <-
         data = dataset,
         trace = TRUE,
         aggregate = "shot_age",
-        dependence = dependance,
+        dependances = dependance,
         time = "shot_age"
       )
     if (summary) {
@@ -20,14 +20,14 @@ bild_model <-
   }
 
 
-# builds all models of different dependances
+# builds all models of different dependancess
 # "ind", "MC1", "MC1R", "MC2", "MC2R"
 bild_all_models <- function (dataset){
   models <- c()
   dependances <- c("ind", "MC1","MC1R", "MC2", "MC2R")
   for (dep in dependances){
-    print(paste("model with dependance: ", dep))
-    models <- c(models,bild_model(dataset, dep, TRUE))
+    print(paste("model with dependances: ", dep))
+    models <- c(models, bild_model(dataset, dep, TRUE))
   }
   names(models) <- dependances
   return (models)
