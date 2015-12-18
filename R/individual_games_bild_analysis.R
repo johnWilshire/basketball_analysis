@@ -10,7 +10,7 @@ bild_model <-
         data = dataset,
         trace = TRUE,
         aggregate = "shot_age",
-        dependences = dependence,
+        dependence = dependence,
         time = "shot_age"
       )
     if (summary) {
