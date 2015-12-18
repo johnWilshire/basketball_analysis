@@ -3,14 +3,14 @@
 # this way we can easily add / change covariates
 # and reevaluate models
 bild_model <-
-  function(dataset, dependance, summary = FALSE, time = "shot_age") {
+  function(dataset, dependence, summary = FALSE, time = "shot_age") {
     model <-
       bild(
         makes_shot ~ shot_age + quarter + score_diff + distance,
         data = dataset,
         trace = TRUE,
         aggregate = "shot_age",
-        dependances = dependance,
+        dependences = dependence,
         time = "shot_age"
       )
     if (summary) {
@@ -20,16 +20,16 @@ bild_model <-
   }
 
 
-# builds all models of different dependancess
+# builds all models of different dependencess
 # "ind", "MC1", "MC1R", "MC2", "MC2R"
 bild_all_models <- function (dataset){
   models <- c()
-  dependances <- c("ind", "MC1","MC1R", "MC2", "MC2R")
-  for (dep in dependances){
-    print(paste("model with dependances: ", dep))
+  dependences <- c("ind", "MC1","MC1R", "MC2", "MC2R")
+  for (dep in dependences){
+    print(paste("model with dependences: ", dep))
     models <- c(models, bild_model(dataset, dep, TRUE))
   }
-  names(models) <- dependances
+  names(models) <- dependences
   return (models)
 }
 
