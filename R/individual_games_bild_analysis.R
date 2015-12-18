@@ -24,10 +24,12 @@ bild_model <-
 # "ind", "MC1", "MC1R", "MC2", "MC2R"
 bild_all_models <- function (dataset){
   models <- c()
-  for (dep in c("ind", "MC1", "MC1R", "MC2", "MC2R")){
+  dependances <- c("ind", "MC1","MC1R", "MC2", "MC2R")
+  for (dep in dependances){
     print(paste("model with dependance: ", dep))
-    models <- c(models, bild_model(dataset, dep, TRUE))
+    models <- c(models,bild_model(dataset, dep, TRUE))
   }
+  names(models) <- dependances
   return (models)
 }
 
@@ -91,7 +93,7 @@ subset_bball_by_year <- function(ball, year = 2005){
   return(ball_specific_year)
 }
 
-save_model <- function(specific_model){
-  save(specific_model, file = "output.rds")
+save_model <- function(all_models, name = "output.rds"){
+  save(all_models, file = name)
 }
 
