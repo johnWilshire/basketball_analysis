@@ -12,7 +12,7 @@ random_dataset_for_bild <- function (n, num_ids, prob = 0.5){
   return(data.frame(id, success, counts, age))
 }
 
-r <- random_dataset_for_bild(1000,100)
+r <- random_dataset_for_bild(100000,100)
 
 bild_ind <- bild(success ~ age, data = r, dependence = "ind", time = "age")
 summary(bild_ind)
