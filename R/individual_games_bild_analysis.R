@@ -62,6 +62,8 @@ data_prepare <- function(ball){
   # change makes shot to numeric vector 1 = TRUE, 0 = FALSE
   ball$makes_shot <- as.numeric(ball$makes_shot) - 1
   
+  #ball$player.player_id <-  lapply(ball$player.player_id, toString)
+  
   # convert the time and dates to comfy POSIX
   ball$date <-  lapply(ball$date, toString)
   ball$date <- strptime(ball$date,"%B %d, %Y")
